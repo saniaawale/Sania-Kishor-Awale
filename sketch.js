@@ -1,13 +1,45 @@
+let snake;
+let food;
+let s = 20;
+
 function setup() {
   createCanvas(600, 600);
   snake = new Snake();
   pickLocation();
   frameRate(10);
-  
 }
 
-let snake;
-let s = 20;
+function draw() {
+  background(51);
+  if (snake.eat(food)) {
+    pickLocation();
+  }
+  snake.death();
+  snake.update();
+  snake.show();
+
+  fill(255, 0, 100);
+  rect(food.x, food.y, s, s);
+}
+
+function pickLocation() {
+  let cols = floor(width / s);
+  let rows = floor(height / s);
+  food = createVector(floor(random(cols)), floor(random(rows)));
+  food.mult(s);
+}
+
+function keyPressed() {
+  if (keyCode === UP_ARROW) {
+    snake.dir(0, -1);
+  } else if (keyCode === DOWN_ARROW) {
+    snake.dir(0, 1);
+  } else if (keyCode === LEFT_ARROW) {
+    snake.dir(-1, 0);
+  } else if (keyCode === RIGHT_ARROW) {
+    snake.dir(1, 0);
+  }
+}
 
 class Snake {
   constructor() {
@@ -19,8 +51,8 @@ class Snake {
     this.tail = [];
   }
 
-  eat(posfood) {
-    let d = dist(this.x, this.y, posfood.x, posfood.y);
+  eat(pos) {
+    let d = dist(this.x, this.y, pos.x, pos.y);
     if (d < 1) {
       this.total++;
       return true;
@@ -56,6 +88,8 @@ class Snake {
     this.x = this.x + this.xspeed * s;
     this.y = this.y + this.yspeed * s;
 
+    this.x = constrain(this.x, 0, width - s);
+    this.y = constrain(this.y, 0, height - s);
   }
 
   show() {
@@ -64,37 +98,5 @@ class Snake {
       rect(this.tail[i].x, this.tail[i].y, s, s);
     }
     rect(this.x, this.y, s, s);
-    
-  }
-}
-
-function draw() {
-   background(51);
-  if (snake.eat(food)) {
-    pickLocation();
-  }
-  snake.death();
-  snake.update();
-  snake.show();
-
-  fill(255, 0, 100);
-  rect(food.x, food.y, s, s);
-}
-function pickLocation() {
-  let cols = floor(width / s);
-  let rows = floor(height / s);
-  food = createVector(floor(random(cols)), floor(random(rows)));
-  food.mult(s);
-}
-
-function keyPressed() {
-  if (keyCode === UP_ARROW) {
-    snake.dir(0, -1);
-  } else if (keyCode === DOWN_ARROW) {
-    snake.dir(0, 1);
-  } else if (keyCode === LEFT_ARROW) {
-    snake.dir(-1, 0);
-  } else if (keyCode === RIGHT_ARROW) {
-    snake.dir(1, 0);
   }
 }
