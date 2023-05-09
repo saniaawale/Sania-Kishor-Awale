@@ -1,5 +1,8 @@
 function setup() {
   createCanvas(600, 600);
+  snake = new Snake();
+  pickLocation();
+  frameRate(10);
   
 }
 
@@ -61,9 +64,37 @@ class Snake {
       rect(this.tail[i].x, this.tail[i].y, s, s);
     }
     rect(this.x, this.y, s, s);
+    
   }
 }
 
 function draw() {
-  background(220);
+   background(51);
+  if (snake.eat(food)) {
+    pickLocation();
+  }
+  snake.death();
+  snake.update();
+  snake.show();
+
+  fill(255, 0, 100);
+  rect(food.x, food.y, s, s);
+}
+function pickLocation() {
+  let cols = floor(width / s);
+  let rows = floor(height / s);
+  food = createVector(floor(random(cols)), floor(random(rows)));
+  food.mult(s);
+}
+
+function keyPressed() {
+  if (keyCode === UP_ARROW) {
+    snake.dir(0, -1);
+  } else if (keyCode === DOWN_ARROW) {
+    snake.dir(0, 1);
+  } else if (keyCode === LEFT_ARROW) {
+    snake.dir(-1, 0);
+  } else if (keyCode === RIGHT_ARROW) {
+    snake.dir(1, 0);
+  }
 }
