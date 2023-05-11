@@ -1,16 +1,25 @@
 let snake;
 let food;
 let s = 20;
+let galaxy;
 
 function setup() {
-  createCanvas(600, 600);
+  createCanvas(800, 500);
   snake = new Snake();
   pickLocation();
   frameRate(10);
+	
+}
+
+let spacefood;
+function preload() {
+  spacefood = loadImage('spacefood.png');
+	galaxy=loadImage('galaxypng.jpg');
 }
 
 function draw() {
-  background(51);
+
+  image(galaxy,0,0,800,500)
   if (snake.eat(food)) {
     pickLocation();
   }
@@ -19,8 +28,11 @@ function draw() {
   snake.show();
 
   fill(255, 0, 100);
-  rect(food.x, food.y, s, s);
+	image(spacefood,food.x,food.y,50,50);
+  //rect(food.x, food.y, s, s);
 }
+
+
 
 function pickLocation() {
   let cols = floor(width / s);
@@ -53,11 +65,35 @@ class Snake {
 
   eat(pos) {
     let d = dist(this.x, this.y, pos.x, pos.y);
-    if (d < 1) {
+		let a= dist(this.x,this.y,pos.x+50,pos.y);
+		let b= dist(this.x,this.y,pos.x,pos.y+50);
+		let c= dist(this.x,this.y,pos.x+50,pos.y+50);
+		for (let i=0;i<50;i++){
+			d=dist(this.x, this.y, pos.x-i, pos.y+i);
+			break
+		}
+		
+		for (let i=0;i<50;i++){
+			a=dist(this.x,this.y,pos.x+50,pos.y+i);
+			break
+		}
+		for (let i=0;i<50;i++){
+			b=dist(this.x,this.y,pos.x,pos.y+50-i);
+			break
+			
+		}
+		
+		for (let i=0;i<50;i++){
+			c=dist(this.x,this.y,pos.x+50-i,pos.y+50+i);
+			break
+		}
+    if (d < 1 || c < 1 || a <1 || b < 1) {
       this.total++;
       return true;
     } else {
+			
       return false;
+			
     }
   }
 
